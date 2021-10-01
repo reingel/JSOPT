@@ -9,11 +9,7 @@
 
 
 import numpy as np
-
-Vector = np.array
-
-def normed(vector):
-    return vector / np.linalg.norm(vector)
+from Vector import *
 
 
 def bisection(dg, max_step, epsilon=1e-3, max_loop=1000):
