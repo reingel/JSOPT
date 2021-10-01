@@ -9,7 +9,7 @@
 
 
 import numpy as np
-from Vector import *
+from Vector import Vector, normed
 
 
 def bisection(dg, max_step, epsilon=1e-3, max_loop=1000):
