@@ -1,16 +1,20 @@
 #
-# line_search.py
-# The line search library for optimization
-# JSOPT: Programming Homeworks of Optimization Theory Class, 2021 Fall
+# JSOPT: python project for optimization theory class, 2021 fall
 #
-# Developed and Maintained by Soonkyu Jeong (reingel@gmail.com)
-# Since Oct. 1, 2021
+# line_search.py: python package for line search
+#
+# Developed and Maintained by Soonkyu Jeong (reingel@o.cnu.ac.kr)
+#  since Oct. 1, 2021
 #
 
 
 import numpy as np
 
 Vector = np.array
+
+def normed(vector):
+    return vector / np.linalg.norm(vector)
+
 
 def bisection(dg, max_step, epsilon=1e-3, max_loop=1000):
     k = 0
@@ -25,8 +29,8 @@ def bisection(dg, max_step, epsilon=1e-3, max_loop=1000):
         elif grad < -epsilon:
             alpha_l = alpha_tilde
         k += 1
-        if k > max_loop:
-            print(f'Reached the maximum number of iteration: {max_loop}')
+        if k == max_loop:
+            print(f'bisection(): reached the maximum number of iteration: {max_loop}')
             break
         alpha_tilde = (alpha_l + alpha_u) / 2
         grad = dg(alpha_tilde)
@@ -37,14 +41,14 @@ def bisection(dg, max_step, epsilon=1e-3, max_loop=1000):
 if __name__ == '__main__':
     
     f = lambda x,y: x**2 + y**2
-    gradf = lambda x,y: Vector((2*x, 2*y))
+    gradf = lambda x,y: Vector([2*x, 2*y])
 
-    xk = Vector((-1, 1))
-    d = Vector((1, 0))
-    max_step = 4
+    xk = Vector([-2, 1])
+    d = normed(Vector([-1, -1]))
+    max_step = 4.6
 
     xd = lambda alpha: xk + alpha * d
-    dg = lambda alpha: gradf(xd(alpha))
+    dg = lambda alpha: np.dot(gradf(*xd(alpha)), d)
 
     alpha, k = bisection(dg, max_step)
 
