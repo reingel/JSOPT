@@ -9,7 +9,7 @@
 
 
 import numpy as np
-from Vector import Vector, normed
+from Vector import Vector, normalized
 
 
 def bisection(dg, max_step, epsilon=1e-3, max_loop=1000):
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     gradf = lambda x,y: Vector([2*x, 2*y])
 
     xk = Vector([-2, 1])
-    d = normed(Vector([1, -1]))
+    d = normalized(Vector([1, -1]))
     max_step = 4.6
 
     xd = lambda alpha: xk + alpha * d

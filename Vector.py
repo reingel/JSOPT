@@ -13,5 +13,5 @@ import numpy as np
 
 Vector = np.array
 
-def normed(vector):
+def normalized(vector):
     return vector / np.linalg.norm(vector)
