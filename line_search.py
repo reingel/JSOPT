@@ -28,7 +28,7 @@ def bisection(dg, max_step, epsilon=1e-3, max_loop=1000):
         grad = dg(alpha_tilde)
         k += 1
         if k == max_loop:
-            print(f'bisection(): reached the maximum number of iteration: {max_loop}')
+            print(f'bisection(): reached the maximum number of iteration: {k}')
             break
     
     return alpha_tilde, k
