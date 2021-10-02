@@ -15,4 +15,4 @@ Vector = np.array
 Matrix = np.array
 
 def normalized(vector):
-    return vector / np.linalg.norm(vector)
+	return vector / np.linalg.norm(vector)
