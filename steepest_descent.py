@@ -15,6 +15,19 @@ from line_search import bisection
 
 
 def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, ls_epsilon=1e-6, ls_max_num_iter=1000):
+	# minimize f(x) using the steepest descent algorithm
+	# sda() function description
+	# 1. input arguments
+	# 	- f: an objective function f(x) (function)
+	# 	- gradf: the gradient of f(x) (function)
+	# 	- x0: a starting point of optimization which is sequencially input by "for loop" (Vector = numpy.ndarray)
+	# 	- epsilon: the first stopping criteria. sda() will stop if |gradf(xk)| <= epsilon. (float)
+	# 	- max_num_iter: the second stopping criteria. sda() will stop if the number of iterations is greater than max_num_iter. (integer)
+	# 2. return values
+	# 	- xopt: the minimizer of f(x) (Vector = numpy.ndarray)
+	# 	- fval_opt: the minimum of f(x) (float)
+	# 	- status: 0 if the minimum is found within max_num_iter, 1 if the number of iterations reaches max_num_iter. (integer)
+	# 	- history: the sequencially stored values of x, d, fval (dictionary)
 	k = 0
 	xk = x0
 	fk = f(xk)

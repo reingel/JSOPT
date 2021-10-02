@@ -6,3 +6,8 @@ This repository is for the programming homeworks of the Optimization Theory clas
 
 ## HW#1
 
+Prob 2. Minimization of a quadratic function using the steepest descent algorithm
+
+<img src='prob2-output.png'>
+
+Prob 3. 

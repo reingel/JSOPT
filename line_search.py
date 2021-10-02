@@ -14,6 +14,21 @@ from linalg import Vector, normalized
 
 
 def bisection(f, gradf, x0, d, alpha_max, epsilon=1e-6, max_num_iter=1000):
+	# minimize f(x0 + alpha * d) w.r.t. alpha using the bisection algorithm
+	# bisection() function description
+	# 1. input arguments
+	# 	- f: an objective function f(x) (function)
+	# 	- gradf: the gradient of f(x) (function)
+	# 	- x0: a starting point of optimization (Vector = numpy.ndarray)
+	# 	- d: a direction vector (Vector = numpy.ndarray)
+	# 	- alpha_max: the maximum search length of alpha
+	# 	- epsilon: the first stopping criteria. bisection() will stop if |gradf(xk).d| <= epsilon. (float)
+	# 	- max_num_iter: the second stopping criteria. bisection() will stop if the number of iterations is greater than max_num_iter. (integer)
+	# 2. return values
+	# 	- xopt: the minimum point of f(x0 + alpha * d) (Vector = numpy.ndarray)
+	# 	- fval_opt: the minimum of f(x0 + alpha * d) (float)
+	# 	- status: 0 if the minimum is found within max_num_iter, 1 if the number of iterations reaches max_num_iter. (integer)
+	# 	- history: the sequencially stored values of alpha, x, fval (dictionary)
 	xd = lambda alpha: x0 + alpha * d
 	dg = lambda alpha: np.dot(gradf(xd(alpha)), d)
 
