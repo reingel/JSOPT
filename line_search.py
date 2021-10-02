@@ -19,40 +19,40 @@ def bisection(f, gradf, x0, d, alpha_max, epsilon=1e-6, max_num_iter=1000):
 
     k = 0
     alpha_l, alpha_u = 0., alpha_max
-    alpha = (alpha_l + alpha_u) / 2
-    x = xd(alpha)
-    fval = f(x)
-    grad = dg(alpha)
+    alpha_k = (alpha_l + alpha_u) / 2
+    xk = xd(alpha_k)
+    fk = f(xk)
+    grad = dg(alpha_k)
 
-    history = {'alpha': [alpha_l,alpha], 'x': [x0,x], 'fval': [f(x0),fval]}
+    history = {'alpha': [alpha_l,alpha_k], 'x': [x0,xk], 'fval': [f(x0),fk]}
     status = CONVERGED
 
     while (abs(grad) > epsilon):
         if grad > epsilon:
-            alpha_u = alpha
+            alpha_u = alpha_k
         elif grad < -epsilon:
-            alpha_l = alpha
-        alpha = (alpha_l + alpha_u) / 2
-        x = xd(alpha)
-        fval = f(x)
-        grad = dg(alpha)
+            alpha_l = alpha_k
+        alpha_k = (alpha_l + alpha_u) / 2
+        xk = xd(alpha_k)
+        fk = f(xk)
+        grad = dg(alpha_k)
 
-        history['alpha'].append(alpha)
-        history['x'].append(x)
-        history['fval'].append(fval)
+        history['alpha'].append(alpha_k)
+        history['x'].append(xk)
+        history['fval'].append(fk)
 
         k += 1
         if k == max_num_iter:
             status = REACHED_MAX_ITER
-            print(f'bisection(): reached the maximum number of iteration: {k}')
+            print(f'bisection: reached the maximum number of iteration: {k}')
             break
+
+    xopt = xk
+    fval_opt = fk
 
     history['alpha'] = np.array(history['alpha'])
     history['x'] = np.array(history['x'])
     history['fval'] = np.array(history['fval'])
-
-    xopt = x
-    fval_opt = fval
 
     return xopt, fval_opt, status, history
 
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
     xopt, fval_opt, status, history = bisection(f, gradf, x0, d, alpha_max)
 
-    print(f'xopt={np.round(xopt,2)}, fval_opt={np.round(fval_opt,2)}')
+    print(f"bisection: {status=}, xopt={np.round(xopt,2)}, fval_opt={np.round(fval_opt,2)}, num_iter={len(history['x'])}")
 
     fig, ax = plt.subplots(2,1)
     ax[0].set_aspect(1.0)
