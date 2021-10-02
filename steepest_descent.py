@@ -20,7 +20,7 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, ls
 	# 1. input arguments
 	# 	- f: an objective function f(x) (function)
 	# 	- gradf: the gradient of f(x) (function)
-	# 	- x0: a starting point of optimization which is sequencially input by "for loop" (Vector = numpy.ndarray)
+	# 	- x0: a starting point of optimization (Vector = numpy.ndarray)
 	# 	- epsilon: the first stopping criteria. sda() will stop if |gradf(xk)| <= epsilon. (float)
 	# 	- max_num_iter: the second stopping criteria. sda() will stop if the number of iterations is greater than max_num_iter. (integer)
 	# 2. return values
