@@ -9,7 +9,8 @@
 
 
 import numpy as np
-from Vector import Vector, normalized
+from constant import *
+from linalg import Vector, normalized
 from line_search import bisection
 
 
@@ -22,7 +23,7 @@ def sda(gradf, x0, epsilon=1e-6, max_loop=1000, line_search=bisection, ls_epsilo
     while (np.linalg.norm(dk) > epsilon):
         xd = lambda alpha: xk + alpha * dk
         dg = lambda alpha: np.dot(gradf(*xd(alpha)), dk)
-        alpha, _ = line_search(dg, max_step=100, epsilon=ls_epsilon, max_loop=ls_max_loop) # TODO: deal k
+        alpha, _ = line_search(dg, alpha_max=100, epsilon=ls_epsilon, max_loop=ls_max_loop) # TODO: deal k
         xk = xk + alpha * dk
         k += 1
         if k == max_loop:

@@ -10,7 +10,7 @@
 
 import numpy as np
 from constant import *
-from Vector import Vector, normalized
+from linalg import Vector, normalized
 
 
 def bisection(f, gradf, x0, d, alpha_max, epsilon=1e-6, max_num_iter=1000):
