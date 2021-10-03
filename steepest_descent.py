@@ -14,7 +14,7 @@ from linalg import Vector, normalized
 from line_search import bisection
 
 
-def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, ls_epsilon=1e-6, ls_max_num_iter=1000):
+def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, alpha_max=99, ls_epsilon=1e-6, ls_max_num_iter=1000):
 	# minimize f(x) using the steepest descent algorithm
 	# sda() function description
 	# 1. input arguments
@@ -23,6 +23,10 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, ls
 	# 	- x0: a starting point of optimization (Vector = numpy.ndarray)
 	# 	- epsilon: the first stopping criteria. sda() will stop if |gradf(xk)| <= epsilon. (float)
 	# 	- max_num_iter: the second stopping criteria. sda() will stop if the number of iterations is greater than max_num_iter. (integer)
+	# 	- line_search: the function of line search algorithm
+	# 	- alpha_max: the max. range of line search (numeric of a function of x and d)
+	# 	- ls_epsilon: epsilon for line search algorithm
+	# 	- ls_max_num_iter: max_num_iter for line search algorithm
 	# 2. return values
 	# 	- xopt: the minimizer of f(x) (Vector = numpy.ndarray)
 	# 	- fval_opt: the minimum of f(x) (float)
@@ -37,7 +41,8 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, ls
 	status = CONVERGED
 
 	while (np.linalg.norm(dk) > epsilon):
-		xk, fk, _, _ = line_search(f, gradf, xk, dk, alpha_max=100, epsilon=ls_epsilon, max_num_iter=ls_max_num_iter)
+		alpha_max_value = alpha_max if np.isscalar(alpha_max) else alpha_max(xk, dk)
+		xk, fk, _, _ = line_search(f, gradf, xk, dk, alpha_max=alpha_max_value, epsilon=ls_epsilon, max_num_iter=ls_max_num_iter)
 		dk = -gradf(xk)
 
 		history['x'].append(xk)
@@ -69,7 +74,13 @@ if __name__ == '__main__':
 	gradf = lambda x: Vector([2*x[0], 4*(x[1]-1)])
 	x0 = Vector([-2, 1.4])
 
-	xopt, fval_opt, status, history = sda(f, gradf, x0, epsilon=1e-3, max_num_iter=1000, line_search=bisection)
+	def calc_alpha_max(x, d):
+		alpha_max = 2
+		if d[1] > 0:
+			alpha_max = min(alpha_max, (0.5 - x[1]) / d[1])
+		return alpha_max
+
+	xopt, fval_opt, status, history = sda(f, gradf, x0, epsilon=1e-3, max_num_iter=100, line_search=bisection, alpha_max=calc_alpha_max)
 
 	print(f"sda: {status=}, xopt={np.round(xopt,2)}, fval_opt={np.round(fval_opt,2)}, num_iter={len(history['x'])}")
 
