@@ -32,25 +32,30 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, al
 	# 	- fval_opt: the minimum of f(x) (float)
 	# 	- status: 0 if the minimum is found within max_num_iter, 1 if the number of iterations reaches max_num_iter. (integer)
 	# 	- history: sequencially stored values of x, d, fval, rate_conv (dictionary)
+
+	# set initial values
 	k = 0
 	xk = x0
 	fk = f(xk)
 	dk = -gradf(xk)
 
+	# create additional return values
 	history = {'x': [xk], 'd': [dk], 'fval': [fk]}
 	status = CONVERGED
 
-	while (np.linalg.norm(dk) > epsilon):
+	# search loop
+	while (np.linalg.norm(dk) > epsilon): # stopping criteria 1
 		alpha_max_value = alpha_max if np.isscalar(alpha_max) else alpha_max(xk, dk)
 		xk, fk, _, _ = line_search(f, gradf, xk, dk, alpha_max=alpha_max_value, epsilon=ls_epsilon, max_num_iter=ls_max_num_iter)
 		dk = -gradf(xk)
 
+		# store histories
 		history['x'].append(xk)
 		history['d'].append(dk)
 		history['fval'].append(fk)
 
 		k += 1
-		if k == max_num_iter:
+		if k == max_num_iter: # stopping criteria 2
 			status = REACHED_MAX_ITER
 			print(f'sda: reached the maximum number of iteration: {k}')
 			break
@@ -58,15 +63,19 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, al
 	xopt = xk
 	fval_opt = fk
 
+	# convert to numpy array
 	history['x'] = np.array(history['x'])
 	history['d'] = np.array(history['d'])
 	history['fval'] = np.array(history['fval'])
+
+	# add rate of convergence to history
 	history['rate_conv'] = (history['fval'][1:] - fval_opt) / (history['fval'][:-1] - fval_opt)
 	history['rate_conv'] = np.insert(history['rate_conv'], 0, 1.)
 
 	return xopt, fval_opt, status, history
 
 
+# test code
 if __name__ == '__main__':
 	import matplotlib.pyplot as plt
 	

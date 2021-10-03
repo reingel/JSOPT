@@ -29,9 +29,12 @@ def bisection(f, gradf, x0, d, alpha_max, epsilon=1e-6, max_num_iter=1000):
 	# 	- fval_opt: the minimum of f(x0 + alpha * d) (float)
 	# 	- status: 0 if the minimum is found within max_num_iter, 1 if the number of iterations reaches max_num_iter. (integer)
 	# 	- history: sequencially stored values of alpha, x, fval (dictionary)
+
+	# define a line search function g'(a)=gradf(x0 + a * d).d ('.' means dot product)
 	xd = lambda alpha: x0 + alpha * d
 	dg = lambda alpha: np.dot(gradf(xd(alpha)), d)
 
+	# set initial values
 	k = 0
 	alpha_l, alpha_u = 0., alpha_max
 	alpha_k = (alpha_l + alpha_u) / 2
@@ -39,10 +42,12 @@ def bisection(f, gradf, x0, d, alpha_max, epsilon=1e-6, max_num_iter=1000):
 	fk = f(xk)
 	grad = dg(alpha_k)
 
+	# create additional return values
 	history = {'alpha': [alpha_l,alpha_k], 'x': [x0,xk], 'fval': [f(x0),fk]}
 	status = CONVERGED
 
-	while (abs(grad) > epsilon):
+	# search loop
+	while (abs(grad) > epsilon): # stopping criteria 1
 		if grad > epsilon:
 			alpha_u = alpha_k
 		elif grad < -epsilon:
@@ -52,12 +57,13 @@ def bisection(f, gradf, x0, d, alpha_max, epsilon=1e-6, max_num_iter=1000):
 		fk = f(xk)
 		grad = dg(alpha_k)
 
+		# store histories
 		history['alpha'].append(alpha_k)
 		history['x'].append(xk)
 		history['fval'].append(fk)
 
 		k += 1
-		if k == max_num_iter:
+		if k == max_num_iter: # stopping criteria 2
 			status = REACHED_MAX_ITER
 			print(f'bisection: reached the maximum number of iteration: {k}')
 			break
@@ -65,6 +71,7 @@ def bisection(f, gradf, x0, d, alpha_max, epsilon=1e-6, max_num_iter=1000):
 	xopt = xk
 	fval_opt = fk
 
+	# convert to numpy array
 	history['alpha'] = np.array(history['alpha'])
 	history['x'] = np.array(history['x'])
 	history['fval'] = np.array(history['fval'])
@@ -72,6 +79,7 @@ def bisection(f, gradf, x0, d, alpha_max, epsilon=1e-6, max_num_iter=1000):
 	return xopt, fval_opt, status, history
 
 
+# test code
 if __name__ == '__main__':
 	import matplotlib.pyplot as plt
 	
