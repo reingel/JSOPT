@@ -31,7 +31,7 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, al
 	# 	- xopt: the minimizer of f(x) (Vector = numpy.ndarray)
 	# 	- fval_opt: the minimum of f(x) (float)
 	# 	- status: 0 if the minimum is found within max_num_iter, 1 if the number of iterations reaches max_num_iter. (integer)
-	# 	- history: the sequencially stored values of x, d, fval (dictionary)
+	# 	- history: sequencially stored values of x, d, fval, rate_conv (dictionary)
 	k = 0
 	xk = x0
 	fk = f(xk)
