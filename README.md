@@ -1,15 +1,24 @@
 # JSOPT
 
-<div align=right>202060410 정순규</div>
+202060410 정순규
 
 This repository is for the programming homeworks of the Optimization Theory class, 2021 fall.
 
 ## HW#2 (due Oct. 14, 2021)
+### How to run
+1. Clone this repository into a local directory using the following command.
 
-Prob 2. Minimization of a quadratic function using the steepest descent algorithm
+`git clone https://github.com/reingel/JSOPT.git`
+
+
+2. Open HW#2.ipynb
+
+3. Run all
+
+### Prob 2. Minimization of a quadratic function using the steepest descent algorithm
 
 <img src='prob2-output.png'>
 
-Prob 3. Minimization of a function with log() using the steepest descent algorithm and the bisection algorithm
+### Prob 3. Minimization of a function with log() using the steepest descent algorithm and the bisection algorithm
 
 <img src='prob3-output.png'>
