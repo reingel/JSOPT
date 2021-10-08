@@ -42,7 +42,7 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, al
 	dk = -gradf(xk)
 
 	# define a line search function g'(a)=gradf(x0 + a * d).d ('.' means dot product)
-	xd = lambda alpha: x0 + alpha * dk
+	xd = lambda alpha: xk + alpha * dk
 	gradfd = lambda alpha: np.dot(gradf(xd(alpha)), dk)
 
 	# create additional return values
@@ -91,11 +91,12 @@ if __name__ == '__main__':
 	gradf = lambda x: Vector([2*x[0], 4*(x[1]-1)])
 	x0 = Vector([-2, 1.4])
 
-	def calc_alpha_max(x, d):
-		alpha_max = 2
-		if d[1] > 0:
-			alpha_max = min(alpha_max, (0.5 - x[1]) / d[1])
-		return alpha_max
+	# def calc_alpha_max(x, d):
+	# 	alpha_max = 2
+	# 	if d[1] > 0:
+	# 		alpha_max = min(alpha_max, (0.5 - x[1]) / d[1])
+	# 	return alpha_max
+	calc_alpha_max = 9
 
 	x_opt, fval_opt, status, history = sda(f, gradf, x0, epsilon=1e-3, max_num_iter=100, line_search=bisection, alpha_max=calc_alpha_max)
 
