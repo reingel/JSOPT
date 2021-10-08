@@ -1,6 +1,6 @@
 # JSOPT
 
-202060410 정순규
+202060410 Soonkyu Jeong
 
 This repository is for the programming homeworks of the Optimization Theory class, 2021 fall.
 
@@ -11,7 +11,7 @@ This repository is for the programming homeworks of the Optimization Theory clas
 `git clone https://github.com/reingel/JSOPT.git`
 
 
-2. Open HW#2.ipynb
+2. Open the jupyter notebook "HW#2.ipynb" with Visual Studio Code, Google Colab or any other environments.
 
 3. Run all
 
