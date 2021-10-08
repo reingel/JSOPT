@@ -15,23 +15,27 @@ from line_search import bisection
 
 
 def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, alpha_max=99, ls_epsilon=1e-6, ls_max_num_iter=1000):
-	# minimize f(x) using the steepest descent algorithm
-	# sda() function description
-	# 1. input arguments
-	# 	- f: an objective function f(x) (function)
-	# 	- gradf: the gradient of f(x) (function)
-	# 	- x0: a starting point of optimization (Vector = numpy.ndarray)
-	# 	- epsilon: the first stopping criteria. sda() will stop if |gradf(xk)| <= epsilon. (float)
-	# 	- max_num_iter: the second stopping criteria. sda() will stop if the number of iterations is greater than max_num_iter. (integer)
-	# 	- line_search: the function of line search algorithm
-	# 	- alpha_max: the max. range of line search (numeric of a function of x and d)
-	# 	- ls_epsilon: epsilon for line search algorithm
-	# 	- ls_max_num_iter: max_num_iter for line search algorithm
-	# 2. return values
-	# 	- xopt: the minimizer of f(x) (Vector = numpy.ndarray)
-	# 	- fval_opt: the minimum of f(x) (float)
-	# 	- status: 0 if the minimum is found within max_num_iter, 1 if the number of iterations reaches max_num_iter. (integer)
-	# 	- history: sequencially stored values of x, d, fval, rate_conv (dictionary)
+	"""
+	sda(): minimize f(x) using the steepest descent algorithm
+	<function description>
+	1. input arguments
+		- f: an objective function f(x) (function)
+		- gradf: the gradient of f(x) (function)
+		- x0: a starting point of optimization (numpy.ndarray a.k.a. Vector)
+		- epsilon: the 1st stopping criteria. sda() will stop if |gradf(xk)| <= epsilon. (float)
+		- max_num_iter: the 2nd stopping criteria. sda() will stop if the number of iterations is greater than max_num_iter. (integer)
+		- line_search: a line search algorithm (function)
+		- alpha_max: the max. range of line search (numeric or function)
+		- ls_epsilon: epsilon for the line search algorithm (float)
+		- ls_max_num_iter: max_num_iter for the line search algorithm (integer)
+	2. return values
+		- x_opt: the minimimum point of f(x) (numpy.ndarray a.k.a. Vector)
+		- fval_opt: the minimum value of f(x) (float)
+		- status: (integer)
+			- 0 if the minimum point is found within max_num_iter
+			- 1 if the number of iterations reaches max_num_iter
+		- history: sequencially stored values of x, d, fval, rate_conv (dictionary)
+	"""
 
 	# set initial values
 	k = 0
@@ -39,14 +43,20 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, al
 	fk = f(xk)
 	dk = -gradf(xk)
 
+	# define a line search function g'(a)=gradf(x0 + a * d).d ('.' means dot product)
+	xd = lambda alpha: xk + alpha * dk
+	gradg = lambda alpha: np.dot(gradf(xd(alpha)), dk)
+
 	# create additional return values
-	history = {'x': [xk], 'd': [dk], 'fval': [fk]}
 	status = CONVERGED
+	history = {'x': [xk], 'd': [dk], 'fval': [fk]}
 
 	# search loop
 	while (np.linalg.norm(dk) > epsilon): # stopping criteria 1
-		alpha_max_value = alpha_max if np.isscalar(alpha_max) else alpha_max(xk, dk)
-		xk, fk, _, _ = line_search(f, gradf, xk, dk, alpha_max=alpha_max_value, epsilon=ls_epsilon, max_num_iter=ls_max_num_iter)
+		alpha_max_value = alpha_max if np.isscalar(alpha_max) else alpha_max(xk, dk) # if alpha_max is a number, use itself. if alpha_max is a function, use the value of the function.
+		alpha_k, _, _, _ = line_search(gradg, alpha_max=alpha_max_value, epsilon=ls_epsilon, max_num_iter=ls_max_num_iter)
+		xk = xd(alpha_k)
+		fk = f(xk)
 		dk = -gradf(xk)
 
 		# store histories
@@ -60,7 +70,8 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, al
 			print(f'sda: reached the maximum number of iteration: {k}')
 			break
 	
-	xopt = xk
+	# solutions to return
+	x_opt = xk
 	fval_opt = fk
 
 	# convert to numpy array
@@ -68,11 +79,11 @@ def sda(f, gradf, x0, epsilon=1e-6, max_num_iter=1000, line_search=bisection, al
 	history['d'] = np.array(history['d'])
 	history['fval'] = np.array(history['fval'])
 
-	# add rate of convergence to history
+	# calculate and add the rate of convergence to history
 	history['rate_conv'] = (history['fval'][1:] - fval_opt) / (history['fval'][:-1] - fval_opt)
-	history['rate_conv'] = np.insert(history['rate_conv'], 0, 1.)
+	history['rate_conv'] = np.insert(history['rate_conv'], 0, 1.) # insert 1 at 0-index to match its length with others
 
-	return xopt, fval_opt, status, history
+	return x_opt, fval_opt, status, history
 
 
 # test code
@@ -83,15 +94,16 @@ if __name__ == '__main__':
 	gradf = lambda x: Vector([2*x[0], 4*(x[1]-1)])
 	x0 = Vector([-2, 1.4])
 
-	def calc_alpha_max(x, d):
-		alpha_max = 2
-		if d[1] > 0:
-			alpha_max = min(alpha_max, (0.5 - x[1]) / d[1])
-		return alpha_max
+	# def calc_alpha_max(x, d):
+	# 	alpha_max = 2
+	# 	if d[1] > 0:
+	# 		alpha_max = min(alpha_max, (0.5 - x[1]) / d[1])
+	# 	return alpha_max
+	calc_alpha_max = 9
 
-	xopt, fval_opt, status, history = sda(f, gradf, x0, epsilon=1e-3, max_num_iter=100, line_search=bisection, alpha_max=calc_alpha_max)
+	x_opt, fval_opt, status, history = sda(f, gradf, x0, epsilon=1e-3, max_num_iter=100, line_search=bisection, alpha_max=calc_alpha_max)
 
-	print(f"sda: {status=}, xopt={np.round(xopt,2)}, fval_opt={np.round(fval_opt,2)}, num_iter={len(history['x'])}")
+	print(f"sda: {status=}, x_opt={np.round(x_opt,2)}, fval_opt={np.round(fval_opt,2)}, num_iter={len(history['x'])-1}")
 
 	fig, ax = plt.subplots(2,1)
 	ax[0].set_aspect(1.0)
