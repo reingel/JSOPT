@@ -4,7 +4,7 @@
 
 This repository is for the programming homeworks of the Optimization Theory class, 2021 fall.
 
-## HW#2 (due Oct. 14, 2021)
+## HW2 (due Oct. 14, 2021)
 ### How to run
 1. Clone this repository into a local directory using the following command.
 
