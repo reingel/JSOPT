@@ -34,13 +34,12 @@ def bisection(gradf, alpha_max, epsilon=1e-6, max_num_iter=1000):
 	# set initial values
 	k = 0
 	alpha_l, alpha_u = 0., alpha_max
-	alpha_k = (alpha_l + alpha_u) / 2 # TODO: can be remove
-	grad0 = gradf(alpha_l)
-	grad_k = gradf(alpha_k)
+	alpha_k = alpha_l
+	grad_k = gradf(alpha_l)
 
 	# create additional return values
 	status = CONVERGED
-	history = {'alpha': [alpha_l, alpha_k], 'grad': [grad0, grad_k]}
+	history = {'alpha': [alpha_k], 'grad': [grad_k]}
 
 	# search loop
 	while (abs(grad_k) > epsilon): # stopping criteria 1 (|gradf(alpha) == 0|)
