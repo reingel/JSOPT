@@ -10,7 +10,7 @@
 
 import numpy as np
 from constant import *
-from linalg import Vector, normalized
+from linalg import Vector
 
 
 def bisection(gradf, alpha_max, epsilon=1e-6, max_num_iter=1000):
@@ -73,6 +73,7 @@ def bisection(gradf, alpha_max, epsilon=1e-6, max_num_iter=1000):
 
 # test code
 if __name__ == '__main__':
+	from linalg import normalized
 	import matplotlib.pyplot as plt
 	
 	f = lambda x: x[0]**2 + x[1]**2
